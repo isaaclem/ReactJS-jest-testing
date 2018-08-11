@@ -18,11 +18,22 @@ it('has a textarea and a button', () => {
   expect(wrapped.find('button').length).toEqual(1);
 });
 
-it('has a textarea that users can type in', () => {
-  wrapped.find('textarea').simulate('change', { //simulate provided by Enzyme to simulate events
-    target: { value: 'new comment' }
+describe('the textarea', () => {
+  beforeEach(() => {
+    wrapped.find('textarea').simulate('change', { //simulate provided by Enzyme to simulate events
+      target: { value: 'new comment' }
+    });
+    wrapped.update(); //Hard force for re-rendering
   });
-  wrapped.update(); //Hard force for re-rendering
 
-  expect(wrapped.find('textarea').prop('value')).toEqual('new comment');
+  it('has a textarea that users can type in', () => {
+    expect(wrapped.find('textarea').prop('value')).toEqual('new comment');
+  });
+
+  it('clears all text after form submit', () => {
+    wrapped.find('form').simulate('submit');
+    wrapped.update();
+
+    expect(wrapped.find('textarea').prop('value')).toEqual('');
+  });
 });
